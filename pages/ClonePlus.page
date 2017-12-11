@@ -1,0 +1,51 @@
+<!-- 
+        
+       
+ -->
+<apex:page standardController="Account" extensions="DeepClonePlusController" action="{!initiateClone}" showHeader="false" sidebar="false">
+            
+    <apex:form >
+        <apex:pageMessages />
+
+        <apex:outputPanel >
+            
+            <apex:pageBlocK >
+                <apex:pageBlockSection title="Cloning of Record" collapsible="false">
+                    <b> Please select the records for cloning. While selecting child records, make sure that the related parent is selected.</b>
+                </apex:pageBlockSection>
+
+                <apex:pageBlockButtons location="bottom">                   
+                    <apex:commandButton action="{!doClone}" value="Clone" />    
+                    <apex:commandButton action="{!cancel}" value="Cancel" /> 
+                </apex:pageBlockButtons>
+                
+                <apex:pageBlockTable value="{!myChildRelationships}" var="c" >                                  
+                    <apex:column headerValue="Related Records" >
+                        <br/><h1 style="color: blue;">  <i>{!objLabelMap[c.relationshipName]}</i></h1><br/>
+	
+                        
+                        <apex:pageBlockTable value="{!c.myChildRelationshipRowList}" var="b" >
+                           
+                            <apex:Column headervalue="Select" >                             
+                            	<label for="chkbox"><apex:inputCheckbox title="checkbox" id="chkbox" value="{!b.isSelected}"/></label>                         
+                            </apex:Column>
+                            
+                            <apex:repeat value="{!$ObjectType.Account.FieldSets.Deep_Clone}" rendered="{!c.relationshipName=='Account'}" var="f">                       
+                                <apex:column value="{!b.sObjectOriginal[f.fieldpath]}" rendered="{!c.relationshipName=='Account'}" width="25%"/>						
+                            </apex:repeat>
+
+                            <apex:repeat value="{!$ObjectType.Contact.FieldSets.Deep_Clone}" rendered="{!c.relationshipName=='Contact'}" var="f">                      
+                                <apex:column value="{!b.sObjectOriginal[f.fieldpath]}" rendered="{!c.relationshipName=='Contact'}" width="25%"/>       
+                            </apex:repeat>
+							
+
+                        </apex:pageBlockTable>  
+
+                        <br/><br/>                                          
+                    </apex:column>
+                </apex:pageBlockTable>      
+
+            </apex:pageBlocK>
+        </apex:outputPanel>             
+    </apex:form>
+</apex:page>
